@@ -6,7 +6,15 @@ from utils import (
     apply_referral_bonus, apply_admin_bonus, get_user_transactions,
     confirm_deposit, complete_kyc, format_email_template
 )
+from email_utils import (
+    send_welcome_email, send_transaction_email, send_purchase_email,
+    send_referral_bonus_email, send_kyc_completion_email, send_withdrawal_confirmation_email,
+    send_admin_bonus_email
+)
 import logging
+
+# Configure logging
+logging.basicConfig(level=logging.INFO)
 
 # Index route - Landing page
 @app.route('/')
@@ -49,18 +57,15 @@ def signup():
                         apply_referral_bonus(user_email)
                     break
         
-        # Create welcome email (in real system, this would be sent)
-        welcome_email = format_email_template(
-            "welcome", 
-            username=username,
-            wallet_address=new_user.wallet_address
-        )
+        # Send welcome email to user
+        email_sent = send_welcome_email(username, email, new_user.wallet_address)
         
-        # Log the email for development purposes
-        logging.debug(f"Welcome Email - Subject: {welcome_email['subject']}")
-        logging.debug(f"Welcome Email - Body: {welcome_email['body']}")
+        if email_sent:
+            logging.info(f"Welcome email sent to {email}")
+        else:
+            logging.warning(f"Failed to send welcome email to {email}")
         
-        flash('Account created successfully! You can now log in.', 'success')
+        flash('Account created successfully! You can now log in. Check your email for details.', 'success')
         return redirect(url_for('login'))
     
     return render_template('signup.html')
@@ -208,20 +213,21 @@ def send():
         result = send_coins(user_email, receiver_email, amount)
         
         if result['success']:
-            # Create transaction received email (in real system, this would be sent)
+            # Send transaction email to receiver
             receiver = users[receiver_email]
-            transaction_email = format_email_template(
-                "transaction_received", 
-                username=receiver.username,
-                amount=amount,
-                sender=user.username,
-                balance_coins=receiver.balance_coins,
-                balance_usd=receiver.balance_usd
+            email_sent = send_transaction_email(
+                receiver.username, 
+                receiver_email, 
+                user_email, 
+                amount, 
+                receiver.balance_coins, 
+                receiver.balance_usd
             )
             
-            # Log the email for development purposes
-            logging.debug(f"Transaction Email - Subject: {transaction_email['subject']}")
-            logging.debug(f"Transaction Email - Body: {transaction_email['body']}")
+            if email_sent:
+                logging.info(f"Transaction notification email sent to {receiver_email}")
+            else:
+                logging.warning(f"Failed to send transaction notification email to {receiver_email}")
             
             flash('Transaction successful', 'success')
             return redirect(url_for('dashboard'))
@@ -264,20 +270,21 @@ def buy():
         result = buy_coins(user_email, amount)
         
         if result['success']:
-            # Create purchase email (in real system, this would be sent)
-            purchase_email = format_email_template(
-                "purchase", 
-                username=user.username,
-                amount=amount,
-                balance_coins=user.balance_coins,
-                balance_usd=user.balance_usd
+            # Send purchase confirmation email
+            email_sent = send_purchase_email(
+                user.username, 
+                user_email, 
+                amount, 
+                user.balance_coins, 
+                user.balance_usd
             )
             
-            # Log the email for development purposes
-            logging.debug(f"Purchase Email - Subject: {purchase_email['subject']}")
-            logging.debug(f"Purchase Email - Body: {purchase_email['body']}")
+            if email_sent:
+                logging.info(f"Purchase confirmation email sent to {user_email}")
+            else:
+                logging.warning(f"Failed to send purchase confirmation email to {user_email}")
             
-            flash('Purchase successful', 'success')
+            flash('Purchase successful. Check your email for confirmation.', 'success')
             return redirect(url_for('dashboard'))
         else:
             flash(result['message'], 'danger')
@@ -389,6 +396,16 @@ def admin_complete_kyc():
     user_email = request.json.get('user_email')
     result = complete_kyc(user_email)
     
+    if result['success']:
+        # Send KYC completion confirmation email
+        user = users[user_email]
+        email_sent = send_kyc_completion_email(user.username, user_email)
+        
+        if email_sent:
+            logging.info(f"KYC completion email sent to {user_email}")
+        else:
+            logging.warning(f"Failed to send KYC completion email to {user_email}")
+    
     return jsonify(result)
 
 # Admin - Apply bonus (API)
@@ -414,19 +431,19 @@ def admin_apply_bonus():
     result = apply_admin_bonus(admin_email, user_email, amount)
     
     if result['success']:
-        # Create admin bonus email (in real system, this would be sent)
+        # Send admin bonus email
         user = users[user_email]
-        bonus_email = format_email_template(
-            "admin_bonus", 
-            username=user.username,
-            amount=amount,
-            balance_coins=user.balance_coins,
-            balance_usd=user.balance_usd
+        email_sent = send_admin_bonus_email(
+            user.username, 
+            user_email, 
+            amount, 
+            user.balance_coins
         )
         
-        # Log the email for development purposes
-        logging.debug(f"Admin Bonus Email - Subject: {bonus_email['subject']}")
-        logging.debug(f"Admin Bonus Email - Body: {bonus_email['body']}")
+        if email_sent:
+            logging.info(f"Admin bonus notification email sent to {user_email}")
+        else:
+            logging.warning(f"Failed to send admin bonus notification email to {user_email}")
     
     return jsonify(result)
 
