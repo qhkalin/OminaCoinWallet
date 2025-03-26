@@ -1,0 +1,174 @@
+OMINA COIN WALLET - Full System Overview
+
+This version includes:
+✅ Separate Sign-Up & Login Pages
+✅ Automatic Wallet Generation & Welcome Email
+✅ Instant Coin Transactions Between Users
+✅ Balance Privacy (Hide/Show Wallet & USD)
+✅ Market Price Adjustments (10% Deduction / 5x Boost)
+✅ Referral System with Auto Bonus
+✅ Admin Panel with $200 Billion Balance & Bonus Control
+✅ Manual Deposit Confirmation to Unlock Withdrawals
+✅ Users Can Buy More Coins Using Their USD Balance
+✅ Deduct USD Balance on Purchase & Credit Coin Wallet
+✅ Remove Withdrawn Amount from USD Balance & Show Remaining Funds
+
+🔹 Sign-Up & Login System
+
+1️⃣ Sign-Up Page
+	•	Users register with:
+✅ Username
+✅ Email
+✅ Password
+	•	After sign-up:
+✅ Receives 12 OMINA Coins automatically (12 XXXXXXXX012 = $12)
+✅ Wallet Address (32-byte key) is auto-generated
+✅ Receives Welcome Email
+
+📩 Welcome Email
+Subject: “Welcome to OMINA Wallet – Your Crypto Journey Begins!”
+Body:
+“Dear [Username], your OMINA Wallet has been created successfully! 🎉”
+“Your Wallet Address: [Generated 32-byte Address]”
+“Your starting balance: 12 XXXXXXXX012 ($12.00)”
+“Start referring users & earning rewards now!”
+
+2️⃣ Login Page
+	•	Users log in using:
+✅ Email
+✅ Password
+	•	If credentials match:
+✅ Redirects to User Dashboard
+✅ Displays Wallet Balance & USD Balance
+✅ Balance Hide/Show Toggle
+
+🔹 User Dashboard Features
+
+1️⃣ Wallet System & Market Price Adjustments
+	•	Coin-to-USD Calculation:
+	•	1 XXXXXXXX012 Coin = $1.00
+	•	If a user receives 50 Coins, their USD balance updates to $50.00
+	•	Live Market Price Impact:
+	•	If market drops, deduct 10% from the balance
+	•	If market rises, multiply balance by 5x
+	•	Example:
+	•	If user has $200, and market drops → balance becomes $180
+	•	If market rises → balance becomes $1,000
+
+✅ Balance Hide/Show Toggle (Hides both Coin & USD Balance)
+
+2️⃣ Buy More Coins Using USD Balance
+
+✅ Users can buy more OMINA Coins using their available USD balance
+✅ USD balance is deducted & Coins are credited to their wallet
+
+📌 Example:
+	•	User has $100 USD balance
+	•	User buys 50 XXXXXXXX012 Coins
+	•	$50 is deducted from USD balance
+	•	New Coin Balance: +50 Coins
+	•	New USD Balance: $50.00
+
+📩 Purchase Confirmation Email
+Subject: “You’ve Purchased OMINA Coins!”
+Body:
+“Dear [Username], you have successfully purchased [Amount] XXXXXXXX012 Coins.”
+“New Coin Balance: [Total Coins]”
+“New USD Balance: $[Updated USD]”
+
+3️⃣ Instant Transactions Between Users
+	•	If User A sends funds to User B:
+✅ User B instantly receives Coins & balance updates
+✅ Transaction appears in history
+✅ User B receives a transaction email notification
+
+📩 Transaction Email (Receiving Coins)
+Subject: “You’ve received OMINA Coins!”
+Body:
+“Dear [Username], you have received [Amount] OMINA Coins from [Sender].”
+“New Balance: [Coin Balance] XXXXXXXX012 ($[USD Balance])”
+
+4️⃣ Referral System & Auto Bonus
+
+✅ Each user gets a referral link on their profile
+✅ 200 referrals required to unlock full referral rewards
+✅ Bonus Coins automatically credited when reaching 10 referrals
+
+📩 Bonus Email Notification
+Subject: “Congratulations! You’ve Earned a Referral Bonus!”
+Body:
+“Dear [Username], you have successfully referred 10 users!”
+“You’ve earned [Bonus Amount] XXXXXXXX012 ($[Bonus USD])”
+“New Balance: [Updated Coin & USD Balance]”
+
+🔹 Withdrawal Unlocking System
+
+1️⃣ Manual Deposit Requirement ($20 BTC)
+	•	Users must deposit $20 BTC to a representative wallet address before unlocking withdrawals.
+	•	After deposit, admin manually confirms & unlocks withdrawal access.
+
+2️⃣ KYC Verification for First Withdrawal
+	•	Once a user requests a withdrawal, a “KYC Verification Pending” badge appears.
+	•	User receives an email:
+
+📩 KYC Verification Email
+Subject: “KYC Verification Required for Withdrawal”
+Body:
+“Dear [Username], we noticed unusual activity on your account.”
+“Please contact customer support for verification.”
+
+3️⃣ Deduct Withdrawal Amount from USD Balance
+
+✅ When a user withdraws coins, their USD balance is updated accordingly
+✅ Only the remaining balance is displayed
+
+📌 Example:
+	•	User has $500 USD
+	•	User withdraws 100 XXXXXXXX012 Coins ($100)
+	•	New USD Balance: $400
+
+📩 Withdrawal Confirmation Email
+Subject: “Your Withdrawal is Processing!”
+Body:
+“Dear [Username], you have successfully withdrawn [Amount] XXXXXXXX012 Coins.”
+“New USD Balance: $[Remaining Balance]”
+
+🔹 Admin Panel Features
+
+1️⃣ Admin Login (Separate Page)
+	•	Admin Login Button on Homepage
+	•	Credentials:
+	•	Username: 197200
+	•	Password: 197200
+	•	If login matches, a loading spinner appears → Redirects to Admin Panel
+
+2️⃣ Admin Dashboard ($200 Billion Balance)
+	•	Admin Can View:
+✅ Total Available Balance: $200 Billion
+✅ All user-generated wallet addresses
+✅ Total referrals per user
+✅ Referral status (users who reached 10+ referrals)
+	•	Admin Can:
+✅ Send bonuses to users with 10+ referrals
+✅ View & manage all user wallet addresses
+
+📩 Bonus Email Notification
+Subject: “Admin Reward: Referral Bonus Credited!”
+Body:
+“Dear [Username], the admin has sent you a referral bonus of [Amount] XXXXXXXX012 Coins.”
+“New Balance: [Updated Coin & USD Balance]”
+
+🔹 Final Summary of Features
+
+✅ Sign-Up Page with Auto Wallet Creation & Welcome Email
+✅ Login Page with Secure Access & Wallet Dashboard
+✅ Instant Transactions with Email Notifications
+✅ Market-Based Balance Adjustments (10% Deduction / 5x Boost)
+✅ Balance Privacy Toggle (Hide/Show Coin & USD)
+✅ Referral System (Auto Bonuses for 10+ Referrals)
+✅ Admin Panel with $200 Billion & Bonus Control
+✅ Manual Deposit Confirmation Before First Withdrawal
+✅ KYC Verification for Withdrawals
+✅ Users Can Buy More Coins Using Their USD Balance
+✅ Deduct USD Balance on Purchase & Credit Coin Wallet
+✅ Remove Withdrawn Amount from USD Balance & Show Remaining Funds
