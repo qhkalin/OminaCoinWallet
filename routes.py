@@ -118,11 +118,15 @@ def dashboard():
     user_transactions = get_user_transactions(user_email)
     referral_count = get_user_referrals_count(user_email)
     
+    # Get base URL for referral links
+    base_url = request.url_root.rstrip('/')
+    
     return render_template(
         'dashboard.html', 
         user=user.to_dict(), 
         transactions=user_transactions,
-        referral_count=referral_count
+        referral_count=referral_count,
+        base_url=base_url
     )
 
 # Admin dashboard
@@ -165,10 +169,14 @@ def profile():
     user = users[user_email]
     referral_count = get_user_referrals_count(user_email)
     
+    # Get base URL for referral links
+    base_url = request.url_root.rstrip('/')
+    
     return render_template(
         'profile.html',
         user=user.to_dict(),
-        referral_count=referral_count
+        referral_count=referral_count,
+        base_url=base_url
     )
 
 # Send coins page
