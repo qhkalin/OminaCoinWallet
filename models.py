@@ -6,10 +6,11 @@ from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 
-# Global dictionaries for storing data
+# Global dictionaries and lists for storing data
 users = {}
 wallets = {}
 user_referrals = {}
+transactions = []
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
