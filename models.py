@@ -6,6 +6,11 @@ from app import app
 
 db = SQLAlchemy(app)
 
+# Global dictionaries for storing data
+users = {}
+wallets = {}
+user_referrals = {}
+
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
@@ -28,45 +33,12 @@ class User(db.Model):
         self.password_hash = generate_password_hash(password)
         self.wallet_address = str(uuid.uuid4().hex)
         self.referral_code = str(uuid.uuid4())[:8]
+        self.balance_coins = 12.0
+        self.balance_usd = 12.0
 
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
-    
-    def to_dict(self):
-        return {
-            "username": self.username,
-            "email": self.email,
-            "wallet_address": self.wallet_address,
-            "balance_coins": self.balance_coins,
-            "balance_usd": self.balance_usd,
-            "referral_code": self.referral_code,
-            "is_withdrawal_unlocked": self.is_withdrawal_unlocked,
-            "kyc_verified": self.kyc_verified,
-            "created_at": self.created_at,
-            "last_login": self.last_login,
-            "deposit_confirmed": self.deposit_confirmed,
-            "is_admin": self.is_admin
-        }
 
-class User:
-    def __init__(self, username, email, password):
-        self.username = username
-        self.email = email
-        self.password_hash = generate_password_hash(password)
-        self.wallet_address = str(uuid.uuid4().hex)  # Generate a 32-byte wallet address
-        self.balance_coins = 12.0  # Initial 12 OMINA Coins
-        self.balance_usd = 12.0  # Initial $12.00 (1:1 conversion)
-        self.referral_code = str(uuid.uuid4())[:8]  # Generate a unique referral code
-        self.is_withdrawal_unlocked = False
-        self.kyc_verified = False
-        self.created_at = time.time()
-        self.last_login = None
-        self.deposit_confirmed = False
-        self.is_admin = False
-
-    def check_password(self, password):
-        return check_password_hash(self.password_hash, password)
-    
     def to_dict(self):
         return {
             "username": self.username,
@@ -92,7 +64,7 @@ class Transaction:
         self.amount_usd = amount_coins  # 1:1 conversion
         self.timestamp = time.time()
         self.type = transaction_type  # "transfer", "purchase", "withdrawal", "bonus"
-        
+
     def to_dict(self):
         return {
             "transaction_id": self.transaction_id,
@@ -136,9 +108,12 @@ def initialize_admin():
         admin_user.is_withdrawal_unlocked = True
         admin_user.kyc_verified = True
         admin_user.deposit_confirmed = True
-        
+
         users[admin_email] = admin_user
         wallets[admin_user.wallet_address] = admin_email
+
+# Initialize the database
+db.create_all()
 
 # Initialize admin account
 initialize_admin()
