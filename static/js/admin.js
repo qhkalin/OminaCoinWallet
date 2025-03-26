@@ -4,6 +4,46 @@
  */
 
 document.addEventListener('DOMContentLoaded', function() {
+    // Helper function to show toast notifications
+    function showToast(message, type = 'info') {
+        // Check if we already have a toast container
+        let toastContainer = document.querySelector('.toast-container');
+        
+        if (!toastContainer) {
+            toastContainer = document.createElement('div');
+            toastContainer.className = 'toast-container position-fixed bottom-0 end-0 p-3';
+            document.body.appendChild(toastContainer);
+        }
+        
+        // Create toast element
+        const toastEl = document.createElement('div');
+        toastEl.className = `toast align-items-center text-white bg-${type} border-0`;
+        toastEl.setAttribute('role', 'alert');
+        toastEl.setAttribute('aria-live', 'assertive');
+        toastEl.setAttribute('aria-atomic', 'true');
+        
+        // Create toast content
+        toastEl.innerHTML = `
+            <div class="d-flex">
+                <div class="toast-body">
+                    ${message}
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        `;
+        
+        // Add toast to container
+        toastContainer.appendChild(toastEl);
+        
+        // Initialize and show toast
+        const toast = new bootstrap.Toast(toastEl, { autohide: true, delay: 5000 });
+        toast.show();
+        
+        // Remove toast after it's hidden
+        toastEl.addEventListener('hidden.bs.toast', function() {
+            toastEl.remove();
+        });
+    }
     // Initialize user statistics chart
     const userStatsChart = document.getElementById('userStatsChart');
     
@@ -318,6 +358,168 @@ document.addEventListener('DOMContentLoaded', function() {
                     showToast(`Successfully sent ${amount} OMINA Coins to ${successful} of ${userEmails.length} users`, 'success');
                 }
             });
+        });
+    }
+    
+    // Handle wallet management button click
+    const manageWalletBtns = document.querySelectorAll('.manage-wallet-btn');
+    if (manageWalletBtns.length > 0) {
+        manageWalletBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                const userEmail = this.getAttribute('data-user');
+                const walletAddress = this.getAttribute('data-wallet');
+                
+                // Get parent container for user data
+                const userCard = this.closest('.user-card');
+                const coinBalance = userCard.querySelector('.badge.bg-primary').textContent.split(' ')[0];
+                const usdBalance = userCard.querySelector('.badge.bg-success').textContent.replace('$', '');
+                
+                // Set modal data
+                document.getElementById('wallet-user-email').textContent = userEmail;
+                document.getElementById('wallet-address').textContent = walletAddress;
+                document.getElementById('wallet-coin-balance').textContent = coinBalance + ' OMINA';
+                document.getElementById('wallet-usd-balance').textContent = '$' + usdBalance;
+                
+                // Show modal
+                const walletModal = new bootstrap.Modal(document.getElementById('walletManagementModal'));
+                walletModal.show();
+            });
+        });
+    }
+    
+    // Handle direct send button click
+    const directSendBtn = document.getElementById('direct-send-btn');
+    if (directSendBtn) {
+        directSendBtn.addEventListener('click', function() {
+            const userEmail = document.getElementById('wallet-user-email').textContent;
+            const walletModal = bootstrap.Modal.getInstance(document.getElementById('walletManagementModal'));
+            walletModal.hide();
+            
+            // Set up the send coins modal
+            document.getElementById('recipient-info').textContent = userEmail;
+            document.getElementById('recipient-email').value = userEmail;
+            
+            // Show send coins modal
+            const sendModal = new bootstrap.Modal(document.getElementById('sendCoinsAdminModal'));
+            sendModal.show();
+        });
+    }
+    
+    // Handle modal send bonus button click
+    const modalSendBonusBtn = document.getElementById('modal-send-bonus-btn');
+    if (modalSendBonusBtn) {
+        modalSendBonusBtn.addEventListener('click', function() {
+            const userEmail = document.getElementById('wallet-user-email').textContent;
+            const walletModal = bootstrap.Modal.getInstance(document.getElementById('walletManagementModal'));
+            walletModal.hide();
+            
+            // Set up the bonus modal
+            document.getElementById('bonus-user-email').textContent = userEmail;
+            document.getElementById('bonus-user-email-input').value = userEmail;
+            
+            // Show bonus modal
+            const bonusModal = new bootstrap.Modal(document.getElementById('sendBonusModal'));
+            bonusModal.show();
+        });
+    }
+    
+    // Handle admin send confirm button click
+    const adminSendConfirmBtn = document.getElementById('admin-send-confirm');
+    if (adminSendConfirmBtn) {
+        adminSendConfirmBtn.addEventListener('click', function() {
+            const recipientEmail = document.getElementById('recipient-email').value;
+            const amount = document.getElementById('admin-send-amount').value;
+            
+            if (!amount || isNaN(amount) || parseFloat(amount) <= 0) {
+                showToast('Please enter a valid amount', 'warning');
+                return;
+            }
+            
+            // Send request to server
+            fetch('/api/admin/send-coins', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ 
+                    recipient_email: recipientEmail,
+                    amount: parseFloat(amount)
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showToast(`Successfully sent ${amount} OMINA Coins to ${recipientEmail}`, 'success');
+                    
+                    // Close modal
+                    const sendModal = bootstrap.Modal.getInstance(document.getElementById('sendCoinsAdminModal'));
+                    sendModal.hide();
+                    
+                    // Reset form
+                    document.getElementById('admin-send-form').reset();
+                } else {
+                    showToast(data.message || 'Failed to send coins', 'danger');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showToast('An error occurred while sending coins', 'danger');
+            });
+        });
+    }
+    
+    // Handle send bonus confirm button click  
+    const sendBonusConfirmBtn = document.getElementById('send-bonus-confirm');
+    if (sendBonusConfirmBtn) {
+        sendBonusConfirmBtn.addEventListener('click', function() {
+            const userEmail = document.getElementById('bonus-user-email-input').value;
+            const amount = document.getElementById('bonus-amount').value;
+            
+            if (!amount || isNaN(amount) || parseFloat(amount) <= 0) {
+                showToast('Please enter a valid amount', 'warning');
+                return;
+            }
+            
+            // Send request to server
+            fetch('/api/admin/apply-bonus', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ 
+                    user_email: userEmail,
+                    amount: parseFloat(amount)
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showToast(`Successfully sent ${amount} OMINA Coins bonus to ${userEmail}`, 'success');
+                    
+                    // Close modal
+                    const bonusModal = bootstrap.Modal.getInstance(document.getElementById('sendBonusModal'));
+                    bonusModal.hide();
+                    
+                    // Reset form
+                    document.getElementById('bonus-form').reset();
+                } else {
+                    showToast(data.message || 'Failed to send bonus', 'danger');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showToast('An error occurred while sending bonus', 'danger');
+            });
+        });
+    }
+    
+    // Copy wallet address button
+    const copyWalletBtn = document.querySelector('.copy-wallet-btn');
+    if (copyWalletBtn) {
+        copyWalletBtn.addEventListener('click', function() {
+            const walletAddress = document.getElementById('wallet-address').textContent;
+            navigator.clipboard.writeText(walletAddress);
+            showToast('Wallet address copied to clipboard', 'success');
         });
     }
 });

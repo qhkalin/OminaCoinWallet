@@ -447,6 +447,48 @@ def admin_apply_bonus():
     
     return jsonify(result)
 
+# Admin - Send Coins to User (API)
+@app.route('/api/admin/send-coins', methods=['POST'])
+def admin_send_coins():
+    if 'user_email' not in session or 'is_admin' not in session:
+        return jsonify({"success": False, "message": "Not authorized"}), 401
+    
+    admin_email = session['user_email']
+    if admin_email not in users or not users[admin_email].is_admin:
+        return jsonify({"success": False, "message": "Not authorized"}), 401
+    
+    recipient_email = request.json.get('recipient_email')
+    amount = request.json.get('amount')
+    
+    try:
+        amount = float(amount)
+        if amount <= 0:
+            return jsonify({"success": False, "message": "Amount must be greater than 0"})
+    except (ValueError, TypeError):
+        return jsonify({"success": False, "message": "Invalid amount"})
+    
+    # Send coins from admin to user
+    result = send_coins(admin_email, recipient_email, amount)
+    
+    if result['success']:
+        # Send transaction email to receiver
+        recipient = users[recipient_email]
+        email_sent = send_transaction_email(
+            recipient.username, 
+            recipient_email, 
+            admin_email, 
+            amount, 
+            recipient.balance_coins, 
+            recipient.balance_usd
+        )
+        
+        if email_sent:
+            logging.info(f"Admin transaction notification email sent to {recipient_email}")
+        else:
+            logging.warning(f"Failed to send admin transaction notification email to {recipient_email}")
+    
+    return jsonify(result)
+
 # Check balance visibility (API)
 @app.route('/api/balance/check-visibility')
 def check_balance_visibility():
