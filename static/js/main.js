@@ -105,36 +105,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Market adjustment buttons
-    const marketDropBtn = document.getElementById('market-drop');
-    const marketRiseBtn = document.getElementById('market-rise');
     
-    if (marketDropBtn) {
-        marketDropBtn.addEventListener('click', function() {
-            adjustMarket('drop');
-        });
-    }
-    
-    if (marketRiseBtn) {
-        marketRiseBtn.addEventListener('click', function() {
-            adjustMarket('rise');
-        });
-    }
-    
-    function adjustMarket(changeType) {
-        // Show loading state
-        const button = changeType === 'drop' ? marketDropBtn : marketRiseBtn;
-        const originalText = button.innerHTML;
-        button.disabled = true;
-        button.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Processing...';
-        
-        fetch('/api/market/adjust', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ change_type: changeType })
-        })
         .then(response => response.json())
         .then(data => {
             if (data.success) {
