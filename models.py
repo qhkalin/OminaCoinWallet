@@ -2,9 +2,9 @@ import uuid
 import time
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
-from app import app
+from flask_sqlalchemy import SQLAlchemy
 
-db = SQLAlchemy(app)
+db = SQLAlchemy()
 
 # Global dictionaries for storing data
 users = {}
@@ -111,9 +111,6 @@ def initialize_admin():
 
         users[admin_email] = admin_user
         wallets[admin_user.wallet_address] = admin_email
-
-# Initialize the database
-db.create_all()
 
 # Initialize admin account
 initialize_admin()

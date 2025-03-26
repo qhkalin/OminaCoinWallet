@@ -39,5 +39,12 @@ def _jinja2_filter_currency(value):
         return "$0.00"
     return "${:,.2f}".format(float(value))
 
+# Initialize database
+from models import db
+db.init_app(app)
+
+with app.app_context():
+    db.create_all()
+    
 # Import routes after app is created to avoid circular imports
 from routes import *
