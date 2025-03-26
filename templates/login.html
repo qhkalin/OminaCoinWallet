@@ -1,0 +1,146 @@
+{% extends "layout.html" %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-5">
+        <div class="card shadow">
+            <div class="card-header text-center">
+                <h2 class="mb-0">Login to Your OMINA Wallet</h2>
+            </div>
+            <div class="card-body">
+                <div class="text-center mb-4">
+                    <img src="{{ url_for('static', filename='images/logo.svg') }}" alt="OMINA Coin Wallet Logo" class="omina-logo mb-3">
+                    <p class="text-muted">Access your secure cryptocurrency wallet</p>
+                </div>
+                
+                <form method="POST" action="{{ url_for('login') }}" class="needs-validation" novalidate>
+                    <div class="mb-4">
+                        <label for="email" class="form-label">Email Address</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                            <input type="email" class="form-control" id="email" name="email" placeholder="your@email.com" required>
+                        </div>
+                        <div class="invalid-feedback">
+                            Please enter your email address.
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <div class="d-flex justify-content-between">
+                            <label for="password" class="form-label">Password</label>
+                            <a href="#" class="text-decoration-none small">Forgot Password?</a>
+                        </div>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                            <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password" required>
+                        </div>
+                        <div class="invalid-feedback">
+                            Please enter your password.
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4 form-check">
+                        <input type="checkbox" class="form-check-input" id="remember">
+                        <label class="form-check-label" for="remember">Remember me</label>
+                    </div>
+                    
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="fas fa-sign-in-alt me-2"></i>Login to My Wallet
+                        </button>
+                    </div>
+                </form>
+                
+                <div class="text-center mt-4">
+                    <p>Don't have an account? <a href="{{ url_for('signup') }}">Sign Up</a></p>
+                </div>
+                
+                <hr class="my-4">
+                
+                <div class="text-center">
+                    <p class="text-muted small">By logging in, you agree to our <a href="#" data-bs-toggle="modal" data-bs-target="#termsModal">Terms of Service</a> and <a href="#" data-bs-toggle="modal" data-bs-target="#privacyModal">Privacy Policy</a>.</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Security Notice Box -->
+        <div class="card mt-4">
+            <div class="card-body">
+                <div class="d-flex">
+                    <div class="me-3">
+                        <i class="fas fa-shield-alt text-primary" style="font-size: 2rem;"></i>
+                    </div>
+                    <div>
+                        <h5 class="mb-1">Security Notice</h5>
+                        <p class="mb-0 small">Always verify you're on the official OMINA Coin Wallet site before logging in. We will never ask for your private keys or full wallet address via email.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Terms of Service Modal -->
+<div class="modal fade" id="termsModal" tabindex="-1" aria-labelledby="termsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="termsModalLabel">Terms of Service</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <h6>1. Acceptance of Terms</h6>
+                <p>By accessing and using OMINA Coin Wallet, you accept and agree to be bound by the terms and provisions of this agreement.</p>
+                
+                <h6>2. User Registration</h6>
+                <p>To use our services, you must register for an account. You agree to provide accurate information and to keep this information updated.</p>
+                
+                <h6>3. Wallet Security</h6>
+                <p>You are responsible for maintaining the confidentiality of your account information, including your password.</p>
+                
+                <h6>4. Transactions</h6>
+                <p>All transactions on OMINA Coin Wallet are final and cannot be reversed once confirmed.</p>
+                
+                <h6>5. Referral Program</h6>
+                <p>Users may participate in our referral program. Bonuses are provided at our discretion and may be modified at any time.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">I Understand</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Privacy Policy Modal -->
+<div class="modal fade" id="privacyModal" tabindex="-1" aria-labelledby="privacyModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="privacyModalLabel">Privacy Policy</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <h6>1. Information Collection</h6>
+                <p>We collect personal information during registration, including your name, email address, and usage data.</p>
+                
+                <h6>2. Use of Information</h6>
+                <p>We use your information to provide and improve our services, process transactions, and send notifications about your account.</p>
+                
+                <h6>3. Data Security</h6>
+                <p>We implement security measures to protect your personal information and maintain the safety of your wallet.</p>
+                
+                <h6>4. Cookies</h6>
+                <p>We use cookies to enhance your user experience and analyze usage patterns.</p>
+                
+                <h6>5. Third-Party Disclosure</h6>
+                <p>We do not sell or trade your information to outside parties.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">I Understand</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

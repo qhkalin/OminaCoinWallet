@@ -1,0 +1,231 @@
+{% extends "layout.html" %}
+
+{% block title %}Deposit & Withdraw{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">Deposit & Withdraw</h4>
+            </div>
+            <div class="card-body">
+                <ul class="nav nav-tabs mb-4" id="depositTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="deposit-tab" data-bs-toggle="tab" data-bs-target="#deposit" type="button" role="tab" aria-controls="deposit" aria-selected="true">
+                            <i class="fas fa-arrow-down me-2"></i>Deposit
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="withdraw-tab" data-bs-toggle="tab" data-bs-target="#withdraw" type="button" role="tab" aria-controls="withdraw" aria-selected="false">
+                            <i class="fas fa-arrow-up me-2"></i>Withdraw
+                        </button>
+                    </li>
+                </ul>
+                
+                <div class="tab-content" id="depositTabsContent">
+                    <!-- Deposit Tab -->
+                    <div class="tab-pane fade show active" id="deposit" role="tabpanel" aria-labelledby="deposit-tab">
+                        <div class="alert alert-info mb-4">
+                            <h5><i class="fas fa-info-circle me-2"></i>Deposit Information</h5>
+                            <p>To unlock withdrawals, you need to make a one-time deposit of $20 in Bitcoin (BTC).</p>
+                        </div>
+                        
+                        <!-- Deposit Status -->
+                        <div class="mb-4">
+                            <h5>Deposit Status</h5>
+                            <div class="p-3 rounded-3 border">
+                                {% if user.deposit_confirmed %}
+                                    <div class="d-flex align-items-center">
+                                        <div class="badge bg-success p-2 me-3">
+                                            <i class="fas fa-check fa-2x"></i>
+                                        </div>
+                                        <div>
+                                            <h5 class="mb-1 text-success">Deposit Confirmed</h5>
+                                            <p class="mb-0">Your deposit has been confirmed. Withdrawals are now unlocked for your account.</p>
+                                        </div>
+                                    </div>
+                                {% else %}
+                                    <div class="d-flex align-items-center">
+                                        <div class="badge bg-warning p-2 me-3">
+                                            <i class="fas fa-exclamation-triangle fa-2x"></i>
+                                        </div>
+                                        <div>
+                                            <h5 class="mb-1 text-warning">Deposit Required</h5>
+                                            <p class="mb-0">Please make a one-time deposit of $20 in BTC to unlock withdrawals.</p>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        {% if not user.deposit_confirmed %}
+                            <!-- Deposit Instructions -->
+                            <div class="mb-4">
+                                <h5>How to Deposit</h5>
+                                <div class="card mb-3">
+                                    <div class="card-body">
+                                        <h6 class="mb-3">Step 1: Send $20 worth of BTC to the following address:</h6>
+                                        <div class="wallet-address mb-2">bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh</div>
+                                        <button class="btn btn-sm btn-outline-primary copy-button" data-copy="bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh">
+                                            <i class="fas fa-copy me-1"></i>Copy Address
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <div class="card mb-3">
+                                    <div class="card-body">
+                                        <h6 class="mb-3">Step 2: Provide transaction details</h6>
+                                        <form id="deposit-form" class="needs-validation" novalidate>
+                                            <div class="mb-3">
+                                                <label for="tx_id" class="form-label">Transaction ID/Hash</label>
+                                                <input type="text" class="form-control" id="tx_id" required>
+                                                <div class="invalid-feedback">
+                                                    Please enter the transaction ID.
+                                                </div>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="tx_amount" class="form-label">Amount Sent (USD)</label>
+                                                <div class="input-group">
+                                                    <span class="input-group-text">$</span>
+                                                    <input type="number" class="form-control" id="tx_amount" value="20" min="20" required>
+                                                </div>
+                                                <div class="invalid-feedback">
+                                                    Amount must be at least $20.
+                                                </div>
+                                            </div>
+                                            <button type="submit" class="btn btn-primary">
+                                                <i class="fas fa-check-circle me-2"></i>Submit Deposit
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                                
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h6 class="mb-3">Step 3: Wait for confirmation</h6>
+                                        <p>After submitting your transaction details, our team will verify your deposit and unlock withdrawals, typically within 24 hours.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Withdraw Tab -->
+                    <div class="tab-pane fade" id="withdraw" role="tabpanel" aria-labelledby="withdraw-tab">
+                        {% if not user.deposit_confirmed %}
+                            <div class="alert alert-warning mb-4">
+                                <h5><i class="fas fa-lock me-2"></i>Withdrawals Locked</h5>
+                                <p class="mb-0">You need to make a one-time deposit of $20 in BTC to unlock withdrawals. Please go to the Deposit tab to complete this step.</p>
+                            </div>
+                        {% elif not user.kyc_verified %}
+                            <div class="alert alert-warning mb-4">
+                                <h5><i class="fas fa-id-card me-2"></i>KYC Verification Required</h5>
+                                <p class="mb-0">You need to complete KYC verification before making withdrawals. <a href="{{ url_for('kyc_verification') }}" class="alert-link">Complete KYC now</a>.</p>
+                            </div>
+                        {% else %}
+                            <div class="alert alert-success mb-4">
+                                <h5><i class="fas fa-check-circle me-2"></i>Ready to Withdraw</h5>
+                                <p class="mb-0">Your account is fully verified and you can make withdrawals.</p>
+                            </div>
+                            
+                            <!-- Withdrawal Form -->
+                            <form id="withdraw-form" class="needs-validation" novalidate>
+                                <div class="mb-3">
+                                    <label for="withdraw_amount" class="form-label">Amount to Withdraw (OMINA Coins)</label>
+                                    <div class="input-group">
+                                        <input type="number" class="form-control" id="withdraw_amount" min="1" max="{{ user.balance_coins }}" required>
+                                        <span class="input-group-text">OMINA</span>
+                                    </div>
+                                    <div class="form-text">
+                                        Available Balance: {{ user.balance_coins|round(2) }} OMINA ({{ user.balance_usd|round(2) }} USD)
+                                    </div>
+                                    <div class="invalid-feedback">
+                                        Please enter a valid amount to withdraw.
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="withdraw_address" class="form-label">Recipient Wallet Address</label>
+                                    <input type="text" class="form-control" id="withdraw_address" required>
+                                    <div class="invalid-feedback">
+                                        Please enter a valid wallet address.
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-4 form-check">
+                                    <input type="checkbox" class="form-check-input" id="confirm_withdraw" required>
+                                    <label class="form-check-label" for="confirm_withdraw">I confirm that the withdrawal address is correct. I understand that transactions cannot be reversed once processed.</label>
+                                    <div class="invalid-feedback">
+                                        You must confirm this understanding.
+                                    </div>
+                                </div>
+                                
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-paper-plane me-2"></i>Process Withdrawal
+                                </button>
+                            </form>
+                            
+                            <div class="alert alert-info mt-4">
+                                <h5><i class="fas fa-info-circle me-2"></i>Withdrawal Information</h5>
+                                <p class="mb-0">Withdrawals are processed within 24 hours. The final amount will be deducted from your USD balance.</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const depositForm = document.getElementById('deposit-form');
+        const withdrawForm = document.getElementById('withdraw-form');
+        
+        if (depositForm) {
+            depositForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                if (!this.checkValidity()) {
+                    e.stopPropagation();
+                    this.classList.add('was-validated');
+                    return;
+                }
+                
+                // Show notification
+                showToast('Deposit information submitted successfully! We will verify your transaction and update your account status.', 'success');
+                
+                // In a real application, this would send the data to the server
+                // For demo purposes, we'll just show a success message
+                setTimeout(function() {
+                    window.location.href = "{{ url_for('dashboard') }}";
+                }, 3000);
+            });
+        }
+        
+        if (withdrawForm) {
+            withdrawForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                if (!this.checkValidity()) {
+                    e.stopPropagation();
+                    this.classList.add('was-validated');
+                    return;
+                }
+                
+                const amount = document.getElementById('withdraw_amount').value;
+                
+                // Show notification
+                showToast(`Withdrawal request for ${amount} OMINA Coins has been submitted. Your request is being processed.`, 'success');
+                
+                // In a real application, this would send the data to the server
+                // For demo purposes, we'll just show a success message
+                setTimeout(function() {
+                    window.location.href = "{{ url_for('dashboard') }}";
+                }, 3000);
+            });
+        }
+    });
+</script>
+{% endblock %}

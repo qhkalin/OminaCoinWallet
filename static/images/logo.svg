@@ -1,0 +1,28 @@
+<svg width="200" height="60" viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background gradients -->
+  <defs>
+    <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3a7bd5" />
+      <stop offset="100%" stop-color="#00d2ff" />
+    </linearGradient>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="2" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+  
+  <!-- Coin symbol -->
+  <circle cx="35" cy="30" r="25" fill="url(#logoGradient)" />
+  <circle cx="35" cy="30" r="20" fill="none" stroke="white" stroke-width="2" />
+  
+  <!-- O symbol -->
+  <text x="35" y="40" font-family="Arial, sans-serif" font-size="26" font-weight="bold" text-anchor="middle" fill="white" filter="url(#glow)">O</text>
+  
+  <!-- OMINA COIN WALLET text -->
+  <text x="115" y="28" font-family="Arial, sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="#3a7bd5">OMINA COIN</text>
+  <text x="115" y="45" font-family="Arial, sans-serif" font-size="14" font-weight="normal" text-anchor="middle" fill="#00d2ff">WALLET</text>
+  
+  <!-- Decorative lines -->
+  <line x1="70" y1="20" x2="160" y2="20" stroke="#3a7bd5" stroke-width="1" opacity="0.3" />
+  <line x1="70" y1="48" x2="160" y2="48" stroke="#00d2ff" stroke-width="1" opacity="0.3" />
+</svg>

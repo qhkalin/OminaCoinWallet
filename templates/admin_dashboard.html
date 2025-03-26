@@ -1,0 +1,198 @@
+{% extends "layout.html" %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block extra_head %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}
+
+{% block content %}
+<!-- Admin Header Banner -->
+<div class="admin-header">
+    <div class="d-flex justify-content-between align-items-center">
+        <div>
+            <h2><i class="fas fa-user-shield me-2"></i>Admin Dashboard</h2>
+            <p class="mb-0">Manage users, transactions, and system settings</p>
+        </div>
+        <div class="text-center">
+            <div class="fs-5 text-white-50">Available Balance</div>
+            <div class="fs-1 fw-bold">{{ admin.balance_usd|round(2)|format_currency }}</div>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <!-- Quick Stats -->
+    <div class="col-md-3">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <div class="display-4 text-primary mb-2">{{ users|length }}</div>
+                <div class="text-muted">Total Users</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                {% set total_balance = 0 %}
+                {% for user in users %}
+                    {% set total_balance = total_balance + user.balance_coins %}
+                {% endfor %}
+                <div class="display-4 text-success mb-2">{{ total_balance|round(2) }}</div>
+                <div class="text-muted">Total OMINA Coins</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                {% set users_with_referrals = 0 %}
+                {% for user in users %}
+                    {% if user.referral_count >= 10 %}
+                        {% set users_with_referrals = users_with_referrals + 1 %}
+                    {% endif %}
+                {% endfor %}
+                <div class="display-4 text-warning mb-2">{{ users_with_referrals }}</div>
+                <div class="text-muted">Users with 10+ Referrals</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                {% set withdrawals_unlocked = 0 %}
+                {% for user in users %}
+                    {% if user.is_withdrawal_unlocked %}
+                        {% set withdrawals_unlocked = withdrawals_unlocked + 1 %}
+                    {% endif %}
+                {% endfor %}
+                <div class="display-4 text-info mb-2">{{ withdrawals_unlocked }}</div>
+                <div class="text-muted">Withdrawals Unlocked</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- User Statistics Chart -->
+<div class="card mb-4">
+    <div class="card-header">
+        <h5 class="mb-0">User Statistics</h5>
+    </div>
+    <div class="card-body">
+        <div class="chart-container">
+            <canvas id="userStatsChart"></canvas>
+        </div>
+    </div>
+</div>
+
+<!-- User Management Section -->
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">User Management</h5>
+        <div class="d-flex">
+            <div class="input-group me-2">
+                <span class="input-group-text"><i class="fas fa-search"></i></span>
+                <input type="text" class="form-control" id="user-search" placeholder="Search users...">
+            </div>
+            <button id="filter-referrals" class="btn btn-outline-primary">Filter by Referrals</button>
+        </div>
+    </div>
+    <div class="card-body">
+        <!-- Mass Actions -->
+        <div class="d-flex mb-3">
+            <div class="form-check me-3">
+                <input class="form-check-input" type="checkbox" id="select-all-users">
+                <label class="form-check-label" for="select-all-users">Select All</label>
+            </div>
+            <div class="btn-group">
+                <button class="btn btn-sm btn-outline-primary mass-action-btn" data-action="confirm-deposits">
+                    <i class="fas fa-check-circle me-1"></i>Confirm Deposits
+                </button>
+                <button class="btn btn-sm btn-outline-warning mass-action-btn" data-action="complete-kyc">
+                    <i class="fas fa-id-card me-1"></i>Complete KYC
+                </button>
+                <button class="btn btn-sm btn-outline-success mass-action-btn" data-action="send-bonus">
+                    <i class="fas fa-gift me-1"></i>Send Bonus
+                </button>
+            </div>
+        </div>
+        
+        <!-- User List -->
+        <div class="row">
+            {% for user in users %}
+                <div class="col-md-6 col-lg-4" 
+                    data-username="{{ user.username }}" 
+                    data-email="{{ user.email }}" 
+                    data-wallet="{{ user.wallet_address }}" 
+                    data-balance="{{ user.balance_usd }}" 
+                    data-referrals="{{ user.referral_count }}">
+                    <div class="user-card mb-3 p-3">
+                        <div class="form-check mb-2">
+                            <input class="form-check-input user-select" type="checkbox" value="{{ user.email }}" id="user-{{ loop.index }}">
+                            <label class="form-check-label" for="user-{{ loop.index }}">
+                                <strong>{{ user.username }}</strong>
+                            </label>
+                        </div>
+                        <div class="small mb-2">{{ user.email }}</div>
+                        <div class="wallet-address small mb-2">{{ user.wallet_address }}</div>
+                        
+                        <div class="d-flex justify-content-between mb-2">
+                            <div>
+                                <span class="badge bg-primary">{{ user.balance_coins|round(2) }} OMINA</span>
+                                <span class="badge bg-success">${{ user.balance_usd|round(2) }}</span>
+                            </div>
+                            <div>
+                                <span class="badge bg-info">{{ user.referral_count }} Referrals</span>
+                            </div>
+                        </div>
+                        
+                        <div class="row g-2">
+                            <div class="col-md-6">
+                                {% if user.deposit_confirmed %}
+                                    <button class="btn btn-sm btn-success w-100 confirm-deposit-btn" data-user="{{ user.email }}" disabled>
+                                        <i class="fas fa-check"></i> Confirmed
+                                    </button>
+                                {% else %}
+                                    <button class="btn btn-sm btn-primary w-100 confirm-deposit-btn" data-user="{{ user.email }}">
+                                        <i class="fas fa-check-circle"></i> Confirm Deposit
+                                    </button>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6">
+                                {% if user.kyc_verified %}
+                                    <button class="btn btn-sm btn-success w-100 complete-kyc-btn" data-user="{{ user.email }}" disabled>
+                                        <i class="fas fa-check"></i> Verified
+                                    </button>
+                                {% else %}
+                                    <button class="btn btn-sm btn-warning w-100 complete-kyc-btn" data-user="{{ user.email }}">
+                                        <i class="fas fa-id-card"></i> Complete KYC
+                                    </button>
+                                {% endif %}
+                            </div>
+                            <div class="col-12">
+                                <button class="btn btn-sm btn-outline-success w-100 send-bonus-btn" data-user="{{ user.email }}">
+                                    <i class="fas fa-gift"></i> Send Bonus
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        
+        {% if not users %}
+            <div class="empty-state">
+                <div class="empty-state-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <h4>No Users Found</h4>
+                <p>There are no registered users in the system yet.</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/admin.js') }}"></script>
+{% endblock %}
+{% endblock %}

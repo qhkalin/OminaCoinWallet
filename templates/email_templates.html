@@ -1,0 +1,391 @@
+{% extends "layout.html" %}
+
+{% block title %}Email Templates{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">Email Templates</h4>
+            </div>
+            <div class="card-body">
+                <p class="text-muted">This page contains templates for all system-generated emails. These templates are for demonstration purposes only.</p>
+                
+                <ul class="nav nav-tabs mb-4" id="emailTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="welcome-tab" data-bs-toggle="tab" data-bs-target="#welcome" type="button" role="tab" aria-controls="welcome" aria-selected="true">
+                            Welcome
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="transaction-tab" data-bs-toggle="tab" data-bs-target="#transaction" type="button" role="tab" aria-controls="transaction" aria-selected="false">
+                            Transaction
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="purchase-tab" data-bs-toggle="tab" data-bs-target="#purchase" type="button" role="tab" aria-controls="purchase" aria-selected="false">
+                            Purchase
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="referral-tab" data-bs-toggle="tab" data-bs-target="#referral" type="button" role="tab" aria-controls="referral" aria-selected="false">
+                            Referral Bonus
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="kyc-tab" data-bs-toggle="tab" data-bs-target="#kyc" type="button" role="tab" aria-controls="kyc" aria-selected="false">
+                            KYC
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="withdrawal-tab" data-bs-toggle="tab" data-bs-target="#withdrawal" type="button" role="tab" aria-controls="withdrawal" aria-selected="false">
+                            Withdrawal
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="admin-bonus-tab" data-bs-toggle="tab" data-bs-target="#admin-bonus" type="button" role="tab" aria-controls="admin-bonus" aria-selected="false">
+                            Admin Bonus
+                        </button>
+                    </li>
+                </ul>
+                
+                <div class="tab-content" id="emailTabsContent">
+                    <!-- Welcome Email -->
+                    <div class="tab-pane fade show active" id="welcome" role="tabpanel" aria-labelledby="welcome-tab">
+                        <div class="card email-preview">
+                            <div class="card-header bg-light">
+                                <div><strong>From:</strong> OMINA Coin Wallet &lt;noreply@ominacoin.com&gt;</div>
+                                <div><strong>To:</strong> [Username] &lt;[user.email]&gt;</div>
+                                <div><strong>Subject:</strong> Welcome to OMINA Wallet – Your Crypto Journey Begins!</div>
+                            </div>
+                            <div class="card-body">
+                                <div class="email-content p-3">
+                                    <div class="text-center mb-4">
+                                        <img src="{{ url_for('static', filename='images/logo.svg') }}" alt="OMINA Coin Wallet Logo" style="width: 200px;">
+                                    </div>
+                                    
+                                    <h2>Welcome to OMINA Coin Wallet! 🎉</h2>
+                                    
+                                    <p>Dear [Username],</p>
+                                    
+                                    <p>Congratulations! Your OMINA Wallet has been created successfully. We're excited to have you join our community of cryptocurrency enthusiasts.</p>
+                                    
+                                    <div class="card bg-light p-3 mb-4">
+                                        <h5>Your Wallet Details</h5>
+                                        <p><strong>Wallet Address:</strong> [Generated 32-byte Address]</p>
+                                        <p><strong>Starting Balance:</strong> 12 XXXXXXXX012 ($12.00)</p>
+                                    </div>
+                                    
+                                    <p>You can access your wallet by logging in to your account. Start referring users and earning rewards now!</p>
+                                    
+                                    <div class="text-center mt-4 mb-4">
+                                        <a href="#" class="btn btn-primary px-4">Log Into Your Wallet</a>
+                                    </div>
+                                    
+                                    <p>If you have any questions or need assistance, feel free to contact our support team at support@ominacoin.com.</p>
+                                    
+                                    <p>Best regards,<br>The OMINA Coin Wallet Team</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Transaction Email -->
+                    <div class="tab-pane fade" id="transaction" role="tabpanel" aria-labelledby="transaction-tab">
+                        <div class="card email-preview">
+                            <div class="card-header bg-light">
+                                <div><strong>From:</strong> OMINA Coin Wallet &lt;noreply@ominacoin.com&gt;</div>
+                                <div><strong>To:</strong> [Username] &lt;[user.email]&gt;</div>
+                                <div><strong>Subject:</strong> You've received OMINA Coins!</div>
+                            </div>
+                            <div class="card-body">
+                                <div class="email-content p-3">
+                                    <div class="text-center mb-4">
+                                        <img src="{{ url_for('static', filename='images/logo.svg') }}" alt="OMINA Coin Wallet Logo" style="width: 200px;">
+                                    </div>
+                                    
+                                    <h2>You've Received OMINA Coins! 💰</h2>
+                                    
+                                    <p>Dear [Username],</p>
+                                    
+                                    <p>Great news! You have received [Amount] OMINA Coins from [Sender].</p>
+                                    
+                                    <div class="card bg-success text-white p-3 mb-4">
+                                        <h5>Transaction Details</h5>
+                                        <p><strong>Amount Received:</strong> [Amount] OMINA Coins</p>
+                                        <p><strong>From:</strong> [Sender]</p>
+                                        <p><strong>Date & Time:</strong> [Transaction Date]</p>
+                                    </div>
+                                    
+                                    <div class="card bg-light p-3 mb-4">
+                                        <h5>Your Updated Balance</h5>
+                                        <p><strong>New Balance:</strong> [Coin Balance] XXXXXXXX012 ($[USD Balance])</p>
+                                    </div>
+                                    
+                                    <div class="text-center mt-4 mb-4">
+                                        <a href="#" class="btn btn-primary px-4">View Transaction</a>
+                                    </div>
+                                    
+                                    <p>If you have any questions about this transaction, please contact our support team at support@ominacoin.com.</p>
+                                    
+                                    <p>Best regards,<br>The OMINA Coin Wallet Team</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Purchase Email -->
+                    <div class="tab-pane fade" id="purchase" role="tabpanel" aria-labelledby="purchase-tab">
+                        <div class="card email-preview">
+                            <div class="card-header bg-light">
+                                <div><strong>From:</strong> OMINA Coin Wallet &lt;noreply@ominacoin.com&gt;</div>
+                                <div><strong>To:</strong> [Username] &lt;[user.email]&gt;</div>
+                                <div><strong>Subject:</strong> You've Purchased OMINA Coins!</div>
+                            </div>
+                            <div class="card-body">
+                                <div class="email-content p-3">
+                                    <div class="text-center mb-4">
+                                        <img src="{{ url_for('static', filename='images/logo.svg') }}" alt="OMINA Coin Wallet Logo" style="width: 200px;">
+                                    </div>
+                                    
+                                    <h2>Purchase Confirmation 🛒</h2>
+                                    
+                                    <p>Dear [Username],</p>
+                                    
+                                    <p>Your purchase of OMINA Coins has been completed successfully!</p>
+                                    
+                                    <div class="card bg-primary text-white p-3 mb-4">
+                                        <h5>Purchase Details</h5>
+                                        <p><strong>Amount Purchased:</strong> [Amount] XXXXXXXX012 Coins</p>
+                                        <p><strong>Cost:</strong> $[Amount] USD</p>
+                                        <p><strong>Date & Time:</strong> [Transaction Date]</p>
+                                    </div>
+                                    
+                                    <div class="card bg-light p-3 mb-4">
+                                        <h5>Your Updated Balance</h5>
+                                        <p><strong>New Coin Balance:</strong> [Total Coins] XXXXXXXX012 Coins</p>
+                                        <p><strong>New USD Balance:</strong> $[Updated USD]</p>
+                                    </div>
+                                    
+                                    <div class="text-center mt-4 mb-4">
+                                        <a href="#" class="btn btn-primary px-4">View Account</a>
+                                    </div>
+                                    
+                                    <p>If you have any questions about this purchase, please contact our support team at support@ominacoin.com.</p>
+                                    
+                                    <p>Best regards,<br>The OMINA Coin Wallet Team</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Referral Bonus Email -->
+                    <div class="tab-pane fade" id="referral" role="tabpanel" aria-labelledby="referral-tab">
+                        <div class="card email-preview">
+                            <div class="card-header bg-light">
+                                <div><strong>From:</strong> OMINA Coin Wallet &lt;noreply@ominacoin.com&gt;</div>
+                                <div><strong>To:</strong> [Username] &lt;[user.email]&gt;</div>
+                                <div><strong>Subject:</strong> Congratulations! You've Earned a Referral Bonus!</div>
+                            </div>
+                            <div class="card-body">
+                                <div class="email-content p-3">
+                                    <div class="text-center mb-4">
+                                        <img src="{{ url_for('static', filename='images/logo.svg') }}" alt="OMINA Coin Wallet Logo" style="width: 200px;">
+                                    </div>
+                                    
+                                    <h2>Referral Bonus Awarded! 🎁</h2>
+                                    
+                                    <p>Dear [Username],</p>
+                                    
+                                    <p>Congratulations! You have successfully referred 10 users to OMINA Coin Wallet and earned a special bonus!</p>
+                                    
+                                    <div class="card bg-warning text-dark p-3 mb-4">
+                                        <h5>Bonus Details</h5>
+                                        <p><strong>Bonus Amount:</strong> [Bonus Amount] XXXXXXXX012 Coins</p>
+                                        <p><strong>USD Value:</strong> $[Bonus USD]</p>
+                                        <p><strong>Referral Count:</strong> 10 successful referrals</p>
+                                    </div>
+                                    
+                                    <div class="card bg-light p-3 mb-4">
+                                        <h5>Your Updated Balance</h5>
+                                        <p><strong>New Balance:</strong> [Updated Coin & USD Balance]</p>
+                                    </div>
+                                    
+                                    <p>Keep referring more users to earn additional bonuses! Your next bonus will be unlocked when you reach 50 referrals.</p>
+                                    
+                                    <div class="text-center mt-4 mb-4">
+                                        <a href="#" class="btn btn-primary px-4">View Your Referrals</a>
+                                    </div>
+                                    
+                                    <p>If you have any questions, please contact our support team at support@ominacoin.com.</p>
+                                    
+                                    <p>Best regards,<br>The OMINA Coin Wallet Team</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- KYC Verification Email -->
+                    <div class="tab-pane fade" id="kyc" role="tabpanel" aria-labelledby="kyc-tab">
+                        <div class="card email-preview">
+                            <div class="card-header bg-light">
+                                <div><strong>From:</strong> OMINA Coin Wallet &lt;noreply@ominacoin.com&gt;</div>
+                                <div><strong>To:</strong> [Username] &lt;[user.email]&gt;</div>
+                                <div><strong>Subject:</strong> KYC Verification Required for Withdrawal</div>
+                            </div>
+                            <div class="card-body">
+                                <div class="email-content p-3">
+                                    <div class="text-center mb-4">
+                                        <img src="{{ url_for('static', filename='images/logo.svg') }}" alt="OMINA Coin Wallet Logo" style="width: 200px;">
+                                    </div>
+                                    
+                                    <h2>KYC Verification Required 🔐</h2>
+                                    
+                                    <p>Dear [Username],</p>
+                                    
+                                    <p>We noticed unusual activity on your account. To ensure the security of your funds and continue processing withdrawals, we require you to complete KYC (Know Your Customer) verification.</p>
+                                    
+                                    <div class="card bg-danger text-white p-3 mb-4">
+                                        <h5>Important Notice</h5>
+                                        <p>Withdrawal requests will be placed on hold until your identity is verified. This is a standard security measure to protect your account.</p>
+                                    </div>
+                                    
+                                    <h5>How to Complete Verification:</h5>
+                                    <ol>
+                                        <li>Log in to your OMINA Coin Wallet account</li>
+                                        <li>Navigate to the KYC Verification page</li>
+                                        <li>Upload the required identification documents</li>
+                                        <li>Submit your verification request</li>
+                                    </ol>
+                                    
+                                    <div class="text-center mt-4 mb-4">
+                                        <a href="#" class="btn btn-primary px-4">Complete KYC Verification</a>
+                                    </div>
+                                    
+                                    <p>If you have any questions or need assistance with the verification process, please contact customer support at support@ominacoin.com.</p>
+                                    
+                                    <p>Best regards,<br>The OMINA Coin Wallet Security Team</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Withdrawal Email -->
+                    <div class="tab-pane fade" id="withdrawal" role="tabpanel" aria-labelledby="withdrawal-tab">
+                        <div class="card email-preview">
+                            <div class="card-header bg-light">
+                                <div><strong>From:</strong> OMINA Coin Wallet &lt;noreply@ominacoin.com&gt;</div>
+                                <div><strong>To:</strong> [Username] &lt;[user.email]&gt;</div>
+                                <div><strong>Subject:</strong> Your Withdrawal is Processing!</div>
+                            </div>
+                            <div class="card-body">
+                                <div class="email-content p-3">
+                                    <div class="text-center mb-4">
+                                        <img src="{{ url_for('static', filename='images/logo.svg') }}" alt="OMINA Coin Wallet Logo" style="width: 200px;">
+                                    </div>
+                                    
+                                    <h2>Withdrawal Confirmation 💸</h2>
+                                    
+                                    <p>Dear [Username],</p>
+                                    
+                                    <p>We're processing your withdrawal request. Your funds are on the way!</p>
+                                    
+                                    <div class="card bg-info text-white p-3 mb-4">
+                                        <h5>Withdrawal Details</h5>
+                                        <p><strong>Amount:</strong> [Amount] XXXXXXXX012 Coins</p>
+                                        <p><strong>USD Value:</strong> $[Amount] USD</p>
+                                        <p><strong>Destination Address:</strong> [Receiving Address]</p>
+                                        <p><strong>Date & Time:</strong> [Transaction Date]</p>
+                                    </div>
+                                    
+                                    <div class="card bg-light p-3 mb-4">
+                                        <h5>Your Updated Balance</h5>
+                                        <p><strong>New USD Balance:</strong> $[Remaining Balance]</p>
+                                    </div>
+                                    
+                                    <p>Your withdrawal should be completed within 24 hours. You will receive another email once the transaction is finalized.</p>
+                                    
+                                    <div class="text-center mt-4 mb-4">
+                                        <a href="#" class="btn btn-primary px-4">Track Withdrawal</a>
+                                    </div>
+                                    
+                                    <p>If you did not initiate this withdrawal or have any questions, please contact our support team immediately at support@ominacoin.com.</p>
+                                    
+                                    <p>Best regards,<br>The OMINA Coin Wallet Team</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Admin Bonus Email -->
+                    <div class="tab-pane fade" id="admin-bonus" role="tabpanel" aria-labelledby="admin-bonus-tab">
+                        <div class="card email-preview">
+                            <div class="card-header bg-light">
+                                <div><strong>From:</strong> OMINA Coin Wallet &lt;noreply@ominacoin.com&gt;</div>
+                                <div><strong>To:</strong> [Username] &lt;[user.email]&gt;</div>
+                                <div><strong>Subject:</strong> Admin Reward: Referral Bonus Credited!</div>
+                            </div>
+                            <div class="card-body">
+                                <div class="email-content p-3">
+                                    <div class="text-center mb-4">
+                                        <img src="{{ url_for('static', filename='images/logo.svg') }}" alt="OMINA Coin Wallet Logo" style="width: 200px;">
+                                    </div>
+                                    
+                                    <h2>Special Admin Bonus Awarded! 🏆</h2>
+                                    
+                                    <p>Dear [Username],</p>
+                                    
+                                    <p>We are pleased to inform you that our admin team has sent you a special bonus reward for your exceptional referral performance!</p>
+                                    
+                                    <div class="card bg-primary text-white p-3 mb-4">
+                                        <h5>Bonus Details</h5>
+                                        <p><strong>Bonus Amount:</strong> [Amount] XXXXXXXX012 Coins</p>
+                                        <p><strong>USD Value:</strong> $[Amount] USD</p>
+                                        <p><strong>Reason:</strong> Outstanding referral performance</p>
+                                    </div>
+                                    
+                                    <div class="card bg-light p-3 mb-4">
+                                        <h5>Your Updated Balance</h5>
+                                        <p><strong>New Balance:</strong> [Updated Coin Balance] XXXXXXXX012 ($[Updated USD Balance])</p>
+                                    </div>
+                                    
+                                    <p>Thank you for your continued support and for helping grow the OMINA Coin community. We appreciate your valuable contribution!</p>
+                                    
+                                    <div class="text-center mt-4 mb-4">
+                                        <a href="#" class="btn btn-primary px-4">View Your Wallet</a>
+                                    </div>
+                                    
+                                    <p>If you have any questions about this bonus, please contact our support team at support@ominacoin.com.</p>
+                                    
+                                    <p>Best regards,<br>The OMINA Coin Wallet Admin Team</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .email-preview {
+        border: 1px solid #ddd;
+    }
+    
+    .email-content {
+        background-color: white;
+        border-radius: 5px;
+        font-family: Arial, sans-serif;
+        line-height: 1.6;
+    }
+    
+    @media (prefers-color-scheme: dark) {
+        .email-content {
+            background-color: white;
+            color: #333;
+        }
+    }
+</style>
+{% endblock %}

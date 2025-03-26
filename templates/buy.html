@@ -1,0 +1,210 @@
+{% extends "layout.html" %}
+
+{% block title %}Buy OMINA Coins{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">Buy OMINA Coins</h4>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info mb-4">
+                    <div class="d-flex">
+                        <div class="me-3">
+                            <i class="fas fa-info-circle fa-2x"></i>
+                        </div>
+                        <div>
+                            <h5>How It Works</h5>
+                            <p class="mb-0">Purchase OMINA Coins using your available USD balance. The cost will be deducted from your USD balance, and the purchased coins will be added to your wallet immediately.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Current Balance Information -->
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="mb-3">Your Current Balance</h5>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-2">
+                                    <span class="text-muted">USD Balance:</span>
+                                    <span class="fs-4 ms-2 fw-bold">${{ user.balance_usd|round(2) }}</span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-2">
+                                    <span class="text-muted">OMINA Coins:</span>
+                                    <span class="fs-4 ms-2 fw-bold">{{ user.balance_coins|round(2) }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Purchase Form -->
+                <form method="POST" action="{{ url_for('buy') }}" class="needs-validation" novalidate>
+                    <h5 class="mb-3">Purchase Details</h5>
+                    
+                    <div class="mb-4">
+                        <label for="amount" class="form-label">Amount to Purchase (OMINA Coins)</label>
+                        <div class="input-group">
+                            <input type="number" class="form-control" id="amount" name="amount" min="1" max="{{ user.balance_usd }}" step="0.01" required>
+                            <span class="input-group-text">OMINA</span>
+                        </div>
+                        <div class="form-text">
+                            <div class="d-flex justify-content-between">
+                                <span>1 OMINA = $1.00 USD</span>
+                                <span>Maximum purchase: {{ user.balance_usd|round(2) }} OMINA</span>
+                            </div>
+                        </div>
+                        <div class="invalid-feedback">
+                            Please enter a valid amount to purchase.
+                        </div>
+                    </div>
+                    
+                    <!-- Purchase Summary -->
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h5 class="mb-3">Purchase Summary</h5>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>Purchase Amount:</span>
+                                <span id="purchase-amount">0.00 OMINA</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>Cost:</span>
+                                <span id="purchase-cost">$0.00</span>
+                            </div>
+                            <hr>
+                            <div class="d-flex justify-content-between fw-bold">
+                                <span>New Balance After Purchase:</span>
+                                <span>
+                                    <span id="new-usd-balance">${{ user.balance_usd|round(2) }}</span> | 
+                                    <span id="new-coin-balance">{{ user.balance_coins|round(2) }}</span> OMINA
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4 form-check">
+                        <input type="checkbox" class="form-check-input" id="confirm-purchase" required>
+                        <label class="form-check-label" for="confirm-purchase">I confirm this purchase and understand that the amount will be deducted from my USD balance.</label>
+                        <div class="invalid-feedback">
+                            You must confirm your purchase.
+                        </div>
+                    </div>
+                    
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary btn-lg" id="buy-button">
+                            <i class="fas fa-shopping-cart me-2"></i>Buy OMINA Coins
+                        </button>
+                    </div>
+                </form>
+                
+                <!-- Transaction History -->
+                <div class="mt-5">
+                    <h5 class="mb-3">Recent Purchases</h5>
+                    
+                    {% set purchase_count = 0 %}
+                    {% for tx in transactions %}
+                        {% if tx.type == 'purchase' and tx.receiver_email == user.email %}
+                            {% set purchase_count = purchase_count + 1 %}
+                            <div class="card mb-2">
+                                <div class="card-body py-2">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <div class="fw-bold text-success">
+                                                +{{ tx.amount_coins|round(2) }} OMINA
+                                            </div>
+                                            <div class="small text-muted">
+                                                {{ tx.timestamp|int|strftime('%Y-%m-%d %H:%M') }}
+                                            </div>
+                                        </div>
+                                        <div class="text-end">
+                                            <div class="fw-bold">
+                                                -${{ tx.amount_usd|round(2) }}
+                                            </div>
+                                            <div class="badge bg-primary">
+                                                Purchase
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                    
+                    {% if purchase_count == 0 %}
+                        <div class="empty-state py-4">
+                            <div class="empty-state-icon">
+                                <i class="fas fa-shopping-cart"></i>
+                            </div>
+                            <h5>No Purchases Yet</h5>
+                            <p>Your purchase history will appear here after you buy OMINA Coins.</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const amountInput = document.getElementById('amount');
+        const purchaseAmount = document.getElementById('purchase-amount');
+        const purchaseCost = document.getElementById('purchase-cost');
+        const newUsdBalance = document.getElementById('new-usd-balance');
+        const newCoinBalance = document.getElementById('new-coin-balance');
+        const buyButton = document.getElementById('buy-button');
+        
+        const currentUsdBalance = {{ user.balance_usd }};
+        const currentCoinBalance = {{ user.balance_coins }};
+        
+        // Update purchase summary in real-time
+        amountInput.addEventListener('input', function() {
+            const amount = parseFloat(this.value) || 0;
+            
+            // 1:1 conversion rate
+            const cost = amount;
+            
+            // Update summary
+            purchaseAmount.textContent = amount.toFixed(2) + ' OMINA';
+            purchaseCost.textContent = '$' + cost.toFixed(2);
+            
+            // Calculate new balances
+            const newUsd = currentUsdBalance - cost;
+            const newCoins = currentCoinBalance + amount;
+            
+            newUsdBalance.textContent = '$' + newUsd.toFixed(2);
+            newCoinBalance.textContent = newCoins.toFixed(2);
+            
+            // Disable button if amount is invalid
+            if (amount <= 0 || amount > currentUsdBalance) {
+                buyButton.disabled = true;
+                
+                if (amount > currentUsdBalance) {
+                    this.setCustomValidity('Amount exceeds your available USD balance');
+                } else if (amount <= 0) {
+                    this.setCustomValidity('Amount must be greater than zero');
+                }
+            } else {
+                buyButton.disabled = false;
+                this.setCustomValidity('');
+            }
+        });
+        
+        // Form validation
+        const form = document.querySelector('form');
+        form.addEventListener('submit', function(event) {
+            if (!form.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            
+            form.classList.add('was-validated');
+        });
+    });
+</script>
+{% endblock %}

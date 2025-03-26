@@ -1,0 +1,143 @@
+{% extends "layout.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div class="hero-section">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <h1 class="display-4 fw-bold mb-4">Welcome to OMINA Coin Wallet</h1>
+                <p class="lead mb-4">The most secure and user-friendly cryptocurrency wallet for managing, sending, and receiving OMINA Coins.</p>
+                <div class="d-flex gap-3">
+                    <a href="{{ url_for('signup') }}" class="btn btn-light btn-lg">Get Started</a>
+                    <a href="{{ url_for('login') }}" class="btn btn-outline-light btn-lg">Login</a>
+                </div>
+            </div>
+            <div class="col-md-6 d-none d-md-block">
+                <img src="https://images.unsplash.com/photo-1640161704729-cbe966a08476" alt="Cryptocurrency Wallet Interface" class="img-fluid rounded shadow">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <!-- Key Features -->
+    <section class="mb-5">
+        <h2 class="text-center mb-5">Key Features</h2>
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="feature-box">
+                    <div class="feature-icon">
+                        <i class="fas fa-wallet"></i>
+                    </div>
+                    <h4>Secure Wallet</h4>
+                    <p>Advanced encryption ensures your OMINA Coins are always protected with a unique 32-byte address.</p>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="feature-box">
+                    <div class="feature-icon">
+                        <i class="fas fa-exchange-alt"></i>
+                    </div>
+                    <h4>Instant Transactions</h4>
+                    <p>Send and receive OMINA Coins instantly with real-time balance updates and notifications.</p>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="feature-box">
+                    <div class="feature-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h4>Referral Bonuses</h4>
+                    <p>Earn rewards by referring new users to OMINA Coin Wallet. 10+ referrals unlock special bonuses.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- How It Works -->
+    <section class="mb-5">
+        <h2 class="text-center mb-5">How It Works</h2>
+        <div class="row align-items-center">
+            <div class="col-md-6 order-md-2">
+                <img src="https://images.unsplash.com/photo-1640592276475-56a1c277a38f" alt="OMINA Wallet Dashboard" class="img-fluid rounded shadow mb-4 mb-md-0">
+            </div>
+            <div class="col-md-6 order-md-1">
+                <div class="accordion" id="howItWorksAccordion">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingOne">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                1. Create Your Account
+                            </button>
+                        </h2>
+                        <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#howItWorksAccordion">
+                            <div class="accordion-body">
+                                Sign up with your email and password to get your unique wallet automatically generated. Receive 12 OMINA Coins as a welcome bonus to start your journey.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingTwo">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                2. Manage Your Wallet
+                            </button>
+                        </h2>
+                        <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#howItWorksAccordion">
+                            <div class="accordion-body">
+                                Track your balance in both OMINA Coins and USD value. Send coins to other users, buy more coins, and watch your balance grow with market fluctuations.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingThree">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                3. Earn Through Referrals
+                            </button>
+                        </h2>
+                        <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#howItWorksAccordion">
+                            <div class="accordion-body">
+                                Share your unique referral link with friends and family. After 10 successful referrals, you'll unlock bonus rewards. The more you refer, the more you earn!
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Testimonials -->
+    <section class="mb-5">
+        <h2 class="text-center mb-5">What Our Users Say</h2>
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="testimonial">
+                    <p class="fst-italic">"The instant transactions and user-friendly interface make OMINA Coin Wallet my go-to choice for cryptocurrency management."</p>
+                    <p class="testimonial-author">- James Wilson</p>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="testimonial">
+                    <p class="fst-italic">"I've earned over 50 OMINA Coins just through referrals! The bonus system is amazing and really rewards loyal users."</p>
+                    <p class="testimonial-author">- Sarah Thompson</p>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="testimonial">
+                    <p class="fst-italic">"The security features and balance privacy options give me peace of mind. Best wallet I've used for managing my crypto assets."</p>
+                    <p class="testimonial-author">- Michael Chen</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Call to Action -->
+    <section class="text-center py-5 mb-4">
+        <div class="p-5 rounded" style="background: linear-gradient(45deg, var(--primary-color), var(--secondary-color)); color: white;">
+            <h2 class="mb-4">Ready to Start Your OMINA Coin Journey?</h2>
+            <p class="lead mb-4">Join thousands of users already managing their cryptocurrency with OMINA Coin Wallet.</p>
+            <a href="{{ url_for('signup') }}" class="btn btn-light btn-lg px-4 me-md-2">Create Your Wallet Now</a>
+        </div>
+    </section>
+</div>
+{% endblock %}

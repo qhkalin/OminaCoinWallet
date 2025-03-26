@@ -1,0 +1,291 @@
+{% extends "layout.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block extra_head %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Main Dashboard Content -->
+    <div class="col-lg-8">
+        <!-- Balance Card -->
+        <div class="balance-container">
+            <div class="row balance-info">
+                <div class="col-md-6">
+                    <h4>OMINA Coin Balance</h4>
+                    <h2 class="balance-value" id="coin-balance">{{ user.balance_coins|round(2) }}</h2>
+                    <div class="balance-label">XXXXXXXX012</div>
+                </div>
+                <div class="col-md-6">
+                    <h4>USD Value</h4>
+                    <h2 class="balance-value" id="usd-balance">{{ user.balance_usd|round(2) }}</h2>
+                    <div class="balance-label">USD</div>
+                </div>
+                <div class="col-12 mt-3">
+                    <button id="balance-toggle" class="btn btn-sm btn-light">
+                        <i class="fas fa-eye-slash"></i> Hide Balance
+                    </button>
+                    
+                    <div class="market-buttons">
+                        <button id="market-drop" class="btn btn-sm btn-outline-light">
+                            <i class="fas fa-arrow-down"></i> Market Drop (-10%)
+                        </button>
+                        <button id="market-rise" class="btn btn-sm btn-outline-light">
+                            <i class="fas fa-arrow-up"></i> Market Rise (5x)
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Chart Card -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Balance History</h5>
+            </div>
+            <div class="card-body">
+                <div class="chart-container">
+                    <canvas id="balanceChart"></canvas>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Quick Actions -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Quick Actions</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4 mb-3 mb-md-0">
+                        <a href="{{ url_for('send') }}" class="btn btn-primary w-100">
+                            <i class="fas fa-paper-plane me-2"></i>Send Coins
+                        </a>
+                    </div>
+                    <div class="col-md-4 mb-3 mb-md-0">
+                        <a href="{{ url_for('buy') }}" class="btn btn-success w-100">
+                            <i class="fas fa-shopping-cart me-2"></i>Buy Coins
+                        </a>
+                    </div>
+                    <div class="col-md-4">
+                        <a href="{{ url_for('deposit') }}" class="btn btn-outline-primary w-100">
+                            <i class="fas fa-coins me-2"></i>Deposit / Withdraw
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Transaction History -->
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Transaction History</h5>
+                <span class="badge bg-primary">{{ transactions|length }} Transactions</span>
+            </div>
+            <div class="card-body p-0">
+                {% if transactions %}
+                    <div class="list-group list-group-flush">
+                        {% for tx in transactions[:5] %}
+                            <div class="list-group-item transaction-item">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        {% if tx.sender_email == user.email %}
+                                            <div class="transaction-amount negative">
+                                                <i class="fas fa-arrow-up text-danger"></i> -{{ tx.amount_coins|round(2) }} OMINA
+                                            </div>
+                                            <div class="text-muted small">Sent to {{ tx.receiver_email }}</div>
+                                        {% elif tx.receiver_email == user.email %}
+                                            <div class="transaction-amount positive">
+                                                <i class="fas fa-arrow-down text-success"></i> +{{ tx.amount_coins|round(2) }} OMINA
+                                            </div>
+                                            <div class="text-muted small">Received from {{ tx.sender_email }}</div>
+                                        {% endif %}
+                                        
+                                        <div class="transaction-date">
+                                            {{ tx.timestamp|int|strftime('%Y-%m-%d %H:%M') }}
+                                        </div>
+                                    </div>
+                                    <button class="btn btn-sm btn-outline-secondary view-transaction-btn"
+                                        data-tx-id="{{ tx.transaction_id }}"
+                                        data-tx-type="{{ tx.type }}"
+                                        data-tx-amount="{{ tx.amount_coins|round(2) }} OMINA ({{ tx.amount_usd|round(2) }} USD)"
+                                        data-tx-date="{{ tx.timestamp|int|strftime('%Y-%m-%d %H:%M') }}"
+                                        data-tx-sender="{{ tx.sender_email }}"
+                                        data-tx-receiver="{{ tx.receiver_email }}">
+                                        <i class="fas fa-info-circle"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        {% endfor %}
+                        
+                        {% if transactions|length > 5 %}
+                            <div class="text-center p-3">
+                                <button class="btn btn-sm btn-link" id="view-all-transactions">View All Transactions</button>
+                            </div>
+                        {% endif %}
+                    </div>
+                {% else %}
+                    <div class="empty-state">
+                        <div class="empty-state-icon">
+                            <i class="fas fa-exchange-alt"></i>
+                        </div>
+                        <h4>No Transactions Yet</h4>
+                        <p>Your transaction history will appear here once you send or receive OMINA Coins.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <!-- Sidebar Content -->
+    <div class="col-lg-4 mt-4 mt-lg-0">
+        <!-- Wallet Information -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Wallet Information</h5>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label class="form-label">Username</label>
+                    <div class="fw-bold">{{ user.username }}</div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Wallet Address</label>
+                    <div class="wallet-address">{{ user.wallet_address }}</div>
+                    <button class="btn btn-sm btn-outline-primary mt-2 copy-button" data-copy="{{ user.wallet_address }}">
+                        <i class="fas fa-copy me-1"></i>Copy
+                    </button>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Account Created</label>
+                    <div>{{ user.created_at|int|strftime('%Y-%m-%d') }}</div>
+                </div>
+                <div>
+                    <label class="form-label">Withdrawal Status</label>
+                    {% if user.is_withdrawal_unlocked %}
+                        <div class="badge bg-success">Unlocked</div>
+                    {% else %}
+                        <div class="badge bg-warning">Locked</div>
+                        <a href="{{ url_for('deposit') }}" class="btn btn-sm btn-outline-primary ms-2">Unlock Now</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <!-- Referral System -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Referral Program</h5>
+            </div>
+            <div class="card-body">
+                <div class="referral-container mb-3">
+                    <h6><i class="fas fa-users me-2"></i>Your Referrals</h6>
+                    <div class="d-flex align-items-center">
+                        <div class="h3 mb-0 me-2">{{ referral_count }}</div>
+                        <div>
+                            <div class="progress" style="width: 100px; height: 8px;">
+                                <div class="progress-bar bg-primary" role="progressbar" style="width: {{ (referral_count / 200) * 100 }}%"></div>
+                            </div>
+                            <small class="text-muted">Goal: 200 referrals</small>
+                        </div>
+                    </div>
+                    {% if referral_count >= 10 %}
+                        <div class="badge bg-success mt-2">Bonus Eligible!</div>
+                    {% endif %}
+                </div>
+                
+                <h6>Your Referral Link</h6>
+                <div class="referral-link" id="referral-link">https://ominacoin.com/signup?ref={{ user.referral_code }}</div>
+                <button id="copy-referral" class="btn btn-sm btn-primary mt-2">
+                    <i class="fas fa-copy me-1"></i>Copy Referral Link
+                </button>
+                
+                <div class="alert alert-info mt-3 mb-0">
+                    <small>
+                        <i class="fas fa-info-circle me-1"></i>
+                        Refer 10 users to earn bonus coins! When you reach 200 referrals, you'll unlock additional rewards.
+                    </small>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Market Updates -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Market Updates</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-flex align-items-center mb-3">
+                    <div class="bg-light rounded-circle p-2 me-3">
+                        <i class="fas fa-chart-line text-primary"></i>
+                    </div>
+                    <div>
+                        <div class="text-muted small">Current Rate</div>
+                        <div class="fw-bold">1 OMINA = $1.00 USD</div>
+                    </div>
+                </div>
+                <hr>
+                <div class="small">
+                    <div class="mb-2">
+                        <i class="fas fa-arrow-up text-success me-1"></i>
+                        <strong>Market Rise:</strong> 5x balance increase
+                    </div>
+                    <div>
+                        <i class="fas fa-arrow-down text-danger me-1"></i>
+                        <strong>Market Drop:</strong> 10% balance decrease
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Transaction Detail Modal -->
+<div class="modal fade" id="transactionDetailModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Transaction Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label class="form-label">Transaction ID</label>
+                    <div class="wallet-address" id="modal-tx-id"></div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Type</label>
+                        <div id="modal-tx-type"></div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Amount</label>
+                        <div id="modal-tx-amount"></div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Date & Time</label>
+                    <div id="modal-tx-date"></div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">From</label>
+                    <div id="modal-tx-sender"></div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">To</label>
+                    <div id="modal-tx-receiver"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+{% endblock %}
+{% endblock %}
