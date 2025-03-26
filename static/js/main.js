@@ -57,8 +57,8 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Form validation
     const forms = document.querySelectorAll('.needs-validation');
-    Array.from(forms).forEach(form => {
-        form.addEventListener('submit', event => {
+    forms.forEach(function(form) {
+        form.addEventListener('submit', function(event) {
             if (!form.checkValidity()) {
                 event.preventDefault();
                 event.stopPropagation();
@@ -66,7 +66,7 @@ document.addEventListener('DOMContentLoaded', function() {
             form.classList.add('was-validated');
         }, false);
     });
-    
+
     // Balance visibility toggle
     const balanceToggle = document.getElementById('balance-toggle');
     if (balanceToggle) {
@@ -83,7 +83,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     balanceToggle.innerHTML = '<i class="fas fa-eye-slash"></i> Hide Balance';
                 }
             });
-        
+
         balanceToggle.addEventListener('click', function() {
             fetch('/api/balance/toggle', {
                 method: 'POST',
@@ -105,40 +105,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                // Update balances on the page
-                const coinBalance = document.getElementById('coin-balance');
-                const usdBalance = document.getElementById('usd-balance');
-                
-                if (coinBalance) coinBalance.textContent = data.balance_coins.toFixed(2);
-                if (usdBalance) usdBalance.textContent = data.balance_usd.toFixed(2);
-                
-                const message = changeType === 'drop' 
-                    ? 'Market dropped! Balance decreased by 10%.' 
-                    : 'Market rose! Balance increased by 5x!';
-                
-                showToast(message, 'success');
-            } else {
-                showToast(data.message || 'Error adjusting market price', 'error');
-            }
-            
-            // Reset button state
-            button.disabled = false;
-            button.innerHTML = originalText;
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            showToast('Network error. Please try again.', 'error');
-            
-            // Reset button state
-            button.disabled = false;
-            button.innerHTML = originalText;
-        });
-    }
-    
+
     // Toast notification function
     window.showToast = function(message, type = 'info') {
         const toastContainer = document.querySelector('.toast-container');
