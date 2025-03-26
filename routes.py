@@ -107,7 +107,9 @@ def admin_login():
         else:
             flash('Invalid admin credentials', 'danger')
     
-    return render_template('admin_login.html')
+    # Get base URL for referral links
+    base_url = request.url_root.rstrip('/')
+    return render_template('admin_login.html', base_url=base_url)
 
 # User dashboard
 @app.route('/dashboard')
