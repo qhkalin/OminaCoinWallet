@@ -1,18 +1,52 @@
 import uuid
 import time
 from werkzeug.security import generate_password_hash, check_password_hash
+from flask_sqlalchemy import SQLAlchemy
+from app import app
 
-# In-memory storage for users, wallets, transactions, and referrals
-users = {}  # {email: UserObject}
-wallets = {}  # {wallet_address: WalletObject}
-transactions = []  # List of TransactionObjects
-user_referrals = {}  # {referrer_email: [referred_email1, referred_email2, ...]}
-admin_data = {
-    "username": "197200",
-    "password_hash": generate_password_hash("197200"),
-    "balance_usd": 200000000000.00,  # $200 Billion
-    "wallet_address": str(uuid.uuid4().hex)
-}
+db = SQLAlchemy(app)
+
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(80), unique=True, nullable=False)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    password_hash = db.Column(db.String(200), nullable=False)
+    wallet_address = db.Column(db.String(32), unique=True, nullable=False)
+    balance_coins = db.Column(db.Float, default=12.0)
+    balance_usd = db.Column(db.Float, default=12.0)
+    referral_code = db.Column(db.String(8), unique=True)
+    is_withdrawal_unlocked = db.Column(db.Boolean, default=False)
+    kyc_verified = db.Column(db.Boolean, default=False)
+    created_at = db.Column(db.Float, default=time.time)
+    last_login = db.Column(db.Float)
+    deposit_confirmed = db.Column(db.Boolean, default=False)
+    is_admin = db.Column(db.Boolean, default=False)
+
+    def __init__(self, username, email, password):
+        self.username = username
+        self.email = email
+        self.password_hash = generate_password_hash(password)
+        self.wallet_address = str(uuid.uuid4().hex)
+        self.referral_code = str(uuid.uuid4())[:8]
+
+    def check_password(self, password):
+        return check_password_hash(self.password_hash, password)
+    
+    def to_dict(self):
+        return {
+            "username": self.username,
+            "email": self.email,
+            "wallet_address": self.wallet_address,
+            "balance_coins": self.balance_coins,
+            "balance_usd": self.balance_usd,
+            "referral_code": self.referral_code,
+            "is_withdrawal_unlocked": self.is_withdrawal_unlocked,
+            "kyc_verified": self.kyc_verified,
+            "created_at": self.created_at,
+            "last_login": self.last_login,
+            "deposit_confirmed": self.deposit_confirmed,
+            "is_admin": self.is_admin
+        }
 
 class User:
     def __init__(self, username, email, password):

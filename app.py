@@ -11,6 +11,8 @@ logging.basicConfig(level=logging.DEBUG)
 # Create the Flask app
 app = Flask(__name__)
 app.secret_key = os.environ.get("SESSION_SECRET", "dev-secret-key-for-omina-coin-wallet")
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///omina.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Initialize JWT for authentication
 jwt = JWTManager(app)

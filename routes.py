@@ -1,6 +1,6 @@
 from flask import render_template, request, redirect, url_for, flash, jsonify, session
 from app import app
-from models import users, wallets, transactions, user_referrals, User, get_user_referrals_count
+from models import db, User, get_user_referrals_count
 from utils import (
     generate_wallet_address, send_coins, buy_coins, withdraw_coins, 
     apply_referral_bonus, apply_admin_bonus, get_user_transactions,
