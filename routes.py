@@ -19,7 +19,9 @@ logging.basicConfig(level=logging.INFO)
 # Index route - Landing page
 @app.route('/')
 def index():
-    return render_template('index.html')
+    # Get base URL for referral links
+    base_url = request.url_root.rstrip('/')
+    return render_template('index.html', base_url=base_url)
 
 # User signup
 @app.route('/signup', methods=['GET', 'POST'])
@@ -68,7 +70,9 @@ def signup():
         flash('Account created successfully! You can now log in. Check your email for details.', 'success')
         return redirect(url_for('login'))
     
-    return render_template('signup.html')
+    # Get base URL for referral links
+    base_url = request.url_root.rstrip('/')
+    return render_template('signup.html', base_url=base_url)
 
 # User login
 @app.route('/login', methods=['GET', 'POST'])
@@ -83,7 +87,9 @@ def login():
         else:
             flash('Invalid email or password', 'danger')
     
-    return render_template('login.html')
+    # Get base URL for referral links
+    base_url = request.url_root.rstrip('/')
+    return render_template('login.html', base_url=base_url)
 
 # Admin login
 @app.route('/admin/login', methods=['GET', 'POST'])

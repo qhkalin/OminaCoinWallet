@@ -130,8 +130,8 @@
                     <div class="col-md-6">
                         <h5 class="mb-3">Share Your Referral Link</h5>
                         <div class="input-group mb-3">
-                            <input type="text" class="form-control" value="https://ominacoin.com/signup?ref={{ user.referral_code }}" readonly>
-                            <button class="btn btn-primary copy-button" type="button" data-copy="https://ominacoin.com/signup?ref={{ user.referral_code }}">
+                            <input type="text" class="form-control" value="{{ base_url }}/signup?ref={{ user.referral_code }}" readonly>
+                            <button class="btn btn-primary copy-button" type="button" data-copy="{{ base_url }}/signup?ref={{ user.referral_code }}">
                                 <i class="fas fa-copy"></i> Copy
                             </button>
                         </div>
@@ -323,7 +323,7 @@
             <div class="card-body">
                 <p>If you need assistance with your account or have questions about OMINA Coin Wallet, our support team is here to help.</p>
                 <div class="d-grid">
-                    <a href="mailto:support@ominacoin.com" class="btn btn-primary">
+                    <a href="mailto:support@example.com" class="btn btn-primary">
                         <i class="fas fa-envelope me-2"></i>Contact Support
                     </a>
                 </div>
@@ -469,7 +469,7 @@
         const shareTwitterBtn = document.getElementById('share-twitter');
         const shareWhatsappBtn = document.getElementById('share-whatsapp');
         
-        const referralLink = 'https://ominacoin.com/signup?ref={{ user.referral_code }}';
+        const referralLink = '{{ base_url }}/signup?ref={{ user.referral_code }}';
         const shareText = 'Join me on OMINA Coin Wallet and get 12 free OMINA Coins! Sign up using my referral link:';
         
         if (shareFacebookBtn) {
