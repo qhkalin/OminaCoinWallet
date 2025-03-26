@@ -30,5 +30,12 @@ def _jinja2_filter_datetime(timestamp, fmt=None):
         return dt.strftime(fmt)
     return timestamp
 
+@app.template_filter('format_currency')
+def _jinja2_filter_currency(value):
+    """Format a value as USD currency."""
+    if value is None:
+        return "$0.00"
+    return "${:,.2f}".format(float(value))
+
 # Import routes after app is created to avoid circular imports
 from routes import *
